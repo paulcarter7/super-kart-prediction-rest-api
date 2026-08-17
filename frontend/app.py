@@ -13,7 +13,7 @@ st.subheader("Online Prediction")
 
 # Collect user input for property features
 product_weight = st.number_input("Product Weight (in kg)", min_value=0.0, step=0.1, value=1.0)
-product_sugar_content = st.number_input("Product Sugar Content (in grams)", min_value=0.0, step=0.1, value=1.0)
+product_sugar_content = st.number_input("Product Sugar Content ", ['Low', 'Regular', 'No Sugar'])
 product_allocated_area = st.number_input("Product Allocated Area (ratio)", min_value=0.0, max_value=1.0, step=0.1, value=1.0)
 product_type = st.selectbox("Product Type", [
   'Baking Goods',
