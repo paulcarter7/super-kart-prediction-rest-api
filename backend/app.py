@@ -41,7 +41,6 @@ def predict_kart_price():
         'Store_Establishment_Year': str(kart_data['store_establishment_year']),
         'Store_Size': kart_data['store_size'],
         'Store_Location_City_Type': kart_data['store_location_city_type'],
-        'Store_Location_Type': kart_data['store_location_type'],
         'Store_Type': kart_data['store_type']
     }
 
