@@ -15,7 +15,24 @@ st.subheader("Online Prediction")
 product_weight = st.number_input("Product Weight (in kg)", min_value=0.0, step=0.1, value=1.0)
 product_sugar_content = st.number_input("Product Sugar Content (in grams)", min_value=0.0, step=0.1, value=1.0)
 product_allocated_area = st.number_input("Product Allocated Area (ratio)", min_value=0.0, max_value=1.0, step=0.1, value=1.0)
-product_type = st.selectbox("Product Type",sorted_product_types)
+product_type = st.selectbox("Product Type", [
+  'Baking Goods',
+  'Breads',
+  'Breakfast',
+  'Canned',
+  'Dairy',
+  'Frozen Foods',
+  'Fruits and Vegetables',
+  'Hard Drinks',
+  'Health and Hygiene',
+  'Household',
+  'Meat',
+  'Others',
+  'Seafood',
+  'Snack Foods',
+  'Soft Drinks',
+  'Starchy Foods']                            
+)
 product_mrp = st.number_input("Product MRP (in dollars)", min_value=0.0, step=0.1, value=1.0)
 
 # limited to only existing stores
