@@ -1,62 +1,91 @@
-import streamlit as st
-import pandas as pd
-import requests
+# Import necessary libraries
+import numpy as np
+import joblib  # For loading the serialized model
+import pandas as pd  # For data manipulation
+from flask import Flask, request, jsonify  # For creating the Flask API
 
-# Base URL of the Flask backend
-BACKEND_URL = "http://backend:7860"
+# Initialize the Flask application
+kart_price_predictor_api = Flask("Super Kart Price Predictor")
 
-# Set the title of the Streamlit app
-st.title("Super Kart Price Prediction")
+# Load the trained machine learning model
+model = joblib.load(saved_model_path)
 
-# Section for online prediction
-st.subheader("Online Prediction")
+# Define a route for the home page (GET request)
+@kart_price_predictor_api.get('/')
+def home():
+    """
+    This function handles GET requests to the root URL ('/') of the API.
+    It returns a simple welcome message.
+    """
+    return "Welcome to the Super Kart Price Prediction API!"
 
-# Collect user input for property features
-room_type = st.selectbox("Room Type", ["Entire home/apt", "Private room", "Shared room"])
-accommodates = st.number_input("Accommodates (Number of guests)", min_value=1, value=2)
-bathrooms = st.number_input("Bathrooms", min_value=1, step=1, value=2)
-cancellation_policy = st.selectbox("Cancellation Policy (kind of cancellation policy)", ["strict", "flexible", "moderate"])
-cleaning_fee = st.selectbox("Cleaning Fee Charged?", ["True", "False"])
-instant_bookable = st.selectbox("Instantly Bookable?", ["False", "True"])
-review_scores_rating = st.number_input("Review Score Rating", min_value=0.0, max_value=100.0, step=1.0, value=90.0)
-bedrooms = st.number_input("Bedrooms", min_value=0, step=1, value=1)
-beds = st.number_input("Beds", min_value=0, step=1, value=1)
+# Define an endpoint for single property prediction (POST request)
+@kart_price_predictor_api.post('/v1/prediction')
+def predict_kart_price():
+    """
+    This function handles POST requests to the '/v1/prediction' endpoint.
+    It expects a JSON payload containing property details and returns
+    the predicted rental price as a JSON response.
+    """
+    # Get the JSON data from the request body
+    kart_data = request.get_json()
 
-# Convert user input into a DataFrame
-input_data = pd.DataFrame([{
-    'room_type': room_type,
-    'accommodates': accommodates,
-    'bathrooms': bathrooms,
-    'cancellation_policy': cancellation_policy,
-    'cleaning_fee': cleaning_fee,
-    'instant_bookable': 'f' if instant_bookable=="False" else "t",  # Convert to 't' or 'f'
-    'review_scores_rating': review_scores_rating,
-    'bedrooms': bedrooms,
-    'beds': beds
-}])
+    # Extract relevant features from the JSON data  
+    sample = {
+        'product_weight': kart_data['product_weight'],
+        'product_sugar_content': kart_data['product_sugar_content'],
+        'product_allocated_area': kart_data['product_allocated_area'],
+        'product_type': kart_data['product_type'],
+        'product_mrp': kart_data['product_mrp'],
+        'store_establishment_year': kart_data['store_establishment_year'],
+        'store_size': kart_data['store_size'],
+        'store_location_city_type': kart_data['store_location_city_type'],
+        'store_location_type': kart_data['store_location_type'],
+        'store_type': kart_data['store_type']
+    }
 
-# Make prediction when the "Predict" button is clicked
-if st.button("Predict", type="primary"):
-    response = requests.post(f"{BACKEND_URL}/v1/prediction", json=input_data.to_dict(orient='records')[0])  # Send data to Flask API
-    if response.status_code == 200:
-        prediction = response.json()['Predicted Price (in dollars)']
-        st.success(f"Predicted  Price (in dollars): {prediction}")
-    else:
-        st.error("Unable to connect to the prediction API.")
+    # Convert the extracted data into a Pandas DataFrame
+    input_data = pd.DataFrame([sample])
 
-# Section for batch prediction
-st.subheader("Batch Prediction")
+    # Make prediction (get log_price)
+    predicted_price = model.predict(input_data)[0]
 
-# Allow users to upload a CSV file for batch prediction
-uploaded_file = st.file_uploader("Upload CSV file for batch prediction", type=["csv"])
+    # Convert predicted_price to Python float
+    predicted_price = round(float(predicted_price), 2)
 
-# Make batch prediction when the "Predict Batch" button is clicked
-if uploaded_file is not None:
-    if st.button("Predict Batch", type="primary"):
-        response = requests.post(f"{BACKEND_URL}/v1/batch_prediction", files={"file": uploaded_file})  # Send file to Flask API
-        if response.status_code == 200:
-            predictions = response.json()
-            st.success("Batch predictions completed!")
-            st.write(predictions)  # Display the predictions
-        else:
-            st.error("Unable to connect to the prediction API.")
+    # When we send this value directly within a JSON response, 
+    # Flask's jsonify function encounters a datatype error
+    # Return the actual price
+    return jsonify({'Predicted Price (in dollars)': predicted_price})
+
+
+# Define an endpoint for batch prediction (POST request)
+@kart_price_predictor_api.post('/v1/batch_prediction')
+def predict_kart_price_batch():
+    """
+    This function handles POST requests to the '/v1/batch_prediction' endpoint.
+    It expects a CSV file containing property details for multiple properties
+    and returns the predicted  prices as a dictionary in the JSON response.
+    """
+    # Get the uploaded CSV file from the request
+    file = request.files['file']
+
+    # Read the CSV file into a Pandas DataFrame
+    input_data = pd.read_csv(file)
+
+    # Make predictions for all properties in the DataFrame (get log_prices)
+    predicted_log_prices = model.predict(input_data).tolist()
+
+    # Calculate actual prices
+    predicted_prices = [round(float(np.exp(log_price)), 2) for log_price in predicted_log_prices]
+
+    # Create a dictionary of predictions with property IDs as keys
+    property_ids = input_data['id'].tolist()  # Assuming 'id' is the property ID column
+    output_dict = dict(zip(property_ids, predicted_prices))  # Use actual prices
+
+    # Return the predictions dictionary as a JSON response
+    return output_dict
+
+# Run the Flask application in debug mode if this script is executed directly
+if __name__ == '__main__':
+    kart_price_predictor_api.run(debug=True)
