@@ -6,33 +6,40 @@ import requests
 BACKEND_URL = "http://backend:7860"
 
 # Set the title of the Streamlit app
-st.title("SuperKart Price Prediction")
+st.title("Super Kart Price Prediction")
 
 # Section for online prediction
 st.subheader("Online Prediction")
 
 # Collect user input for property features
-room_type = st.selectbox("Room Type", ["Entire home/apt", "Private room", "Shared room"])
-accommodates = st.number_input("Accommodates (Number of guests)", min_value=1, value=2)
-bathrooms = st.number_input("Bathrooms", min_value=1, step=1, value=2)
-cancellation_policy = st.selectbox("Cancellation Policy (kind of cancellation policy)", ["strict", "flexible", "moderate"])
-cleaning_fee = st.selectbox("Cleaning Fee Charged?", ["True", "False"])
-instant_bookable = st.selectbox("Instantly Bookable?", ["False", "True"])
-review_scores_rating = st.number_input("Review Score Rating", min_value=0.0, max_value=100.0, step=1.0, value=90.0)
-bedrooms = st.number_input("Bedrooms", min_value=0, step=1, value=1)
-beds = st.number_input("Beds", min_value=0, step=1, value=1)
+product_weight = st.number_input("Product Weight (in kg)", min_value=0.0, step=0.1, value=1.0)
+product_sugar_content = st.number_input("Product Sugar Content (in grams)", min_value=0.0, step=0.1, value=1.0)
+product_allocated_area = st.number_input("Product Allocated Area (ratio)", min_value=0.0, max_value=1.0, step=0.1, value=1.0)
+product_type = st.selectbox("Product Type",sorted_product_types)
+product_mrp = st.number_input("Product MRP (in dollars)", min_value=0.0, step=0.1, value=1.0)
+
+# limited to only existing stores
+store_establishment_year = st.selectbox("Store Establishment Year", [1987, 1998, 1999, 2009])
+
+store_size = st.selectbox("Store Size", ["Small", "Medium", "Large"])
+store_location_city_type = st.selectbox("Store Location City Type", ["Tier 1", "Tier 2", "Tier 3"])
+store_location_type = st.selectbox("Store Location Type", ["Supermarket", "Grocery Store"])
+store_type = st.selectbox("Store Type", [
+  "Supermarket Type2", "Supermarket Type1", "Department Store", "Food Mart"
+])
 
 # Convert user input into a DataFrame
 input_data = pd.DataFrame([{
-    'room_type': room_type,
-    'accommodates': accommodates,
-    'bathrooms': bathrooms,
-    'cancellation_policy': cancellation_policy,
-    'cleaning_fee': cleaning_fee,
-    'instant_bookable': 'f' if instant_bookable=="False" else "t",  # Convert to 't' or 'f'
-    'review_scores_rating': review_scores_rating,
-    'bedrooms': bedrooms,
-    'beds': beds
+    'product_weight': product_weight,
+    'product_sugar_content': product_sugar_content,
+    'product_allocated_area': product_allocated_area,
+    'product_type': product_type,
+    'product_mrp': product_mrp,
+    'store_establishment_year': store_establishment_year,
+    'store_size': store_size,
+    'store_location_city_type': store_location_city_type,
+    'store_location_type': store_location_type,
+    'store_type': store_type
 }])
 
 # Make prediction when the "Predict" button is clicked
@@ -40,7 +47,7 @@ if st.button("Predict", type="primary"):
     response = requests.post(f"{BACKEND_URL}/v1/prediction", json=input_data.to_dict(orient='records')[0])  # Send data to Flask API
     if response.status_code == 200:
         prediction = response.json()['Predicted Price (in dollars)']
-        st.success(f"Predicted Rental Price (in dollars): {prediction}")
+        st.success(f"Predicted  Price (in dollars): {prediction}")
     else:
         st.error("Unable to connect to the prediction API.")
 
