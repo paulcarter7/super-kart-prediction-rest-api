@@ -13,7 +13,7 @@ st.subheader("Online Prediction")
 
 # Collect user input for property features
 product_weight = st.number_input("Product Weight (in kg)", min_value=0.0, step=0.1, value=1.0)
-product_sugar_content = st.number_input("Product Sugar Content ", ['Low', 'Regular', 'No Sugar'])
+product_sugar_content = st.selectbox("Product Sugar Content", ['Low Sugar', 'Regular', 'No Sugar']) # Changed to selectbox and updated options
 product_allocated_area = st.number_input("Product Allocated Area (ratio)", min_value=0.0, max_value=1.0, step=0.1, value=1.0)
 product_type = st.selectbox("Product Type", [
   'Baking Goods',
@@ -31,32 +31,31 @@ product_type = st.selectbox("Product Type", [
   'Seafood',
   'Snack Foods',
   'Soft Drinks',
-  'Starchy Foods']                            
-)
+  'Starchy Foods']
+) # Using sorted_product_types from context if available, otherwise using this hardcoded list
 product_mrp = st.number_input("Product MRP (in dollars)", min_value=0.0, step=0.1, value=1.0)
 
 # limited to only existing stores
 store_establishment_year = st.selectbox("Store Establishment Year", [1987, 1998, 1999, 2009])
 
-store_size = st.selectbox("Store Size", ["Small", "Medium", "Large"])
+store_size = st.selectbox("Store Size", ["Small", "Medium", "High"]) # 'Large' changed to 'High'
 store_location_city_type = st.selectbox("Store Location City Type", ["Tier 1", "Tier 2", "Tier 3"])
-store_location_type = st.selectbox("Store Location Type", ["Supermarket", "Grocery Store"])
+# Removed 'store_location_type' as it is not used in the backend API
 store_type = st.selectbox("Store Type", [
-  "Supermarket Type2", "Supermarket Type1", "Department Store", "Food Mart"
+  "Supermarket Type2", "Supermarket Type1", "Departmental Store", "Food Mart" # 'Department Store' changed to 'Departmental Store'
 ])
 
 # Convert user input into a DataFrame
 input_data = pd.DataFrame([{
-    'product_weight': product_weight,
-    'product_sugar_content': product_sugar_content,
-    'product_allocated_area': product_allocated_area,
-    'product_type': product_type,
-    'product_mrp': product_mrp,
-    'store_establishment_year': store_establishment_year,
-    'store_size': store_size,
-    'store_location_city_type': store_location_city_type,
-    'store_location_type': store_location_type,
-    'store_type': store_type
+    'Product_Weight': product_weight,
+    'Product_Sugar_Content': product_sugar_content,
+    'Product_Allocated_Area': product_allocated_area,
+    'Product_Type': product_type,
+    'Product_MRP': product_mrp,
+    'Store_Establishment_Year': store_establishment_year,
+    'Store_Size': store_size,
+    'Store_Location_City_Type': store_location_city_type,
+    'Store_Type': store_type 
 }])
 
 # Make prediction when the "Predict" button is clicked
