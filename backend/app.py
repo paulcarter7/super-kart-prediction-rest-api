@@ -33,16 +33,16 @@ def predict_kart_price():
 
     # Extract relevant features from the JSON data  
     sample = {
-        'product_weight': kart_data['product_weight'],
-        'product_sugar_content': kart_data['product_sugar_content'],
-        'product_allocated_area': kart_data['product_allocated_area'],
-        'product_type': kart_data['product_type'],
-        'product_mrp': kart_data['product_mrp'],
-        'store_establishment_year': kart_data['store_establishment_year'],
-        'store_size': kart_data['store_size'],
-        'store_location_city_type': kart_data['store_location_city_type'],
-        'store_location_type': kart_data['store_location_type'],
-        'store_type': kart_data['store_type']
+        'Product_Weight': kart_data['product_weight'],
+        'Product_Sugar_Content': kart_data['product_sugar_content'],
+        'Product_Allocated_Area': kart_data['product_allocated_area'],
+        'Product_Type': kart_data['product_type'],
+        'Product_MRP': kart_data['product_mrp'],
+        'Store_Establishment_Year': kart_data['store_establishment_year'],
+        'Store_Size': kart_data['store_size'],
+        'Store_Location_City_Type': kart_data['store_location_city_type'],
+        'Store_Location_Type': kart_data['store_location_type'],
+        'Store_Type': kart_data['store_type']
     }
 
     # Convert the extracted data into a Pandas DataFrame
