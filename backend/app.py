@@ -38,7 +38,7 @@ def predict_kart_price():
         'Product_Allocated_Area': kart_data['product_allocated_area'],
         'Product_Type': kart_data['product_type'],
         'Product_MRP': kart_data['product_mrp'],
-        'Store_Establishment_Year': kart_data['store_establishment_year'],
+        'Store_Establishment_Year': str(kart_data['store_establishment_year']),
         'Store_Size': kart_data['store_size'],
         'Store_Location_City_Type': kart_data['store_location_city_type'],
         'Store_Location_Type': kart_data['store_location_type'],
