@@ -32,7 +32,7 @@ product_type = st.selectbox("Product Type", [
   'Snack Foods',
   'Soft Drinks',
   'Starchy Foods']
-) # Using sorted_product_types from context if available, otherwise using this hardcoded list
+) 
 product_mrp = st.number_input("Product MRP (in dollars)", min_value=0.0, step=0.1, value=1.0)
 
 # limited to only existing stores
@@ -55,17 +55,21 @@ input_data = pd.DataFrame([{
     'Store_Establishment_Year': store_establishment_year,
     'Store_Size': store_size,
     'Store_Location_City_Type': store_location_city_type,
-    'Store_Type': store_type 
+    'Store_Type': store_type
 }])
 
 # Make prediction when the "Predict" button is clicked
 if st.button("Predict", type="primary"):
-    response = requests.post(f"{BACKEND_URL}/v1/prediction", json=input_data.to_dict(orient='records')[0])  # Send data to Flask API
-    if response.status_code == 200:
-        prediction = response.json()['Predicted Price (in dollars)']
-        st.success(f"Predicted  Price (in dollars): {prediction}")
+    # Sanity check for Product_Weight
+    if product_weight <= 0.0:
+        st.error("Product Weight must be greater than 0.0.")
     else:
-        st.error("Unable to connect to the prediction API.")
+        response = requests.post(f"{BACKEND_URL}/v1/prediction", json=input_data.to_dict(orient='records')[0])  # Send data to Flask API
+        if response.status_code == 200:
+            prediction = response.json()['Predicted Price (in dollars)']
+            st.success(f"Predicted  Price (in dollars): {prediction}")
+        else:
+            st.error("Unable to connect to the prediction API.")
 
 # Section for batch prediction
 st.subheader("Batch Prediction")
