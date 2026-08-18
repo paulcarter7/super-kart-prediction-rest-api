@@ -12,10 +12,10 @@ st.title("Super Kart Price Prediction")
 st.subheader("Online Prediction")
 
 # Collect user input for property features
-product_weight = st.number_input("Product_Weight", min_value=0.0, step=0.1, value=1.0)
-product_sugar_content = st.selectbox("Product Sugar Content", ['Low Sugar', 'Regular', 'No Sugar']) # Changed to selectbox and updated options
-product_allocated_area = st.number_input("Product Allocated Area (ratio)", min_value=0.0, max_value=1.0, step=0.1, value=1.0)
-product_type = st.selectbox("Product Type", [
+product_weight = st.number_input("product_weight", min_value=0.0, step=0.1, value=1.0)
+product_sugar_content = st.selectbox("product_sugar_content", ['Low Sugar', 'Regular', 'No Sugar']) # Changed to selectbox and updated options
+product_allocated_area = st.number_input("product_allocated_area (ratio)", min_value=0.0, max_value=1.0, step=0.1, value=1.0)
+product_type = st.selectbox("product_type", [
   'Baking Goods',
   'Breads',
   'Breakfast',
@@ -33,15 +33,15 @@ product_type = st.selectbox("Product Type", [
   'Soft Drinks',
   'Starchy Foods']
 ) 
-product_mrp = st.number_input("Product MRP (in dollars)", min_value=0.0, step=0.1, value=1.0)
+product_mrp = st.number_input("product_mrp", min_value=0.0, step=0.1, value=1.0)
 
 # limited to only existing stores
-store_establishment_year = st.selectbox("Store Establishment Year", [1987, 1998, 1999, 2009])
+store_establishment_year = st.selectbox("store_establishment_year", [1987, 1998, 1999, 2009])
 
-store_size = st.selectbox("Store Size", ["Small", "Medium", "High"]) # 'Large' changed to 'High'
-store_location_city_type = st.selectbox("Store Location City Type", ["Tier 1", "Tier 2", "Tier 3"])
+store_size = st.selectbox("store_size", ["Small", "Medium", "High"]) # 'Large' changed to 'High'
+store_location_city_type = st.selectbox("store_location_city_type", ["Tier 1", "Tier 2", "Tier 3"])
 # Removed 'store_location_type' as it is not used in the backend API
-store_type = st.selectbox("Store Type", [
+store_type = st.selectbox("store_type", [
   "Supermarket Type2", "Supermarket Type1", "Departmental Store", "Food Mart" # 'Department Store' changed to 'Departmental Store'
 ])
 
