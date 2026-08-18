@@ -12,7 +12,7 @@ st.title("Super Kart Price Prediction")
 st.subheader("Online Prediction")
 
 # Collect user input for property features
-product_weight = st.number_input("Product Weight (in kg)", min_value=0.0, step=0.1, value=1.0)
+product_weight = st.number_input("Product_Weight", min_value=0.0, step=0.1, value=1.0)
 product_sugar_content = st.selectbox("Product Sugar Content", ['Low Sugar', 'Regular', 'No Sugar']) # Changed to selectbox and updated options
 product_allocated_area = st.number_input("Product Allocated Area (ratio)", min_value=0.0, max_value=1.0, step=0.1, value=1.0)
 product_type = st.selectbox("Product Type", [
