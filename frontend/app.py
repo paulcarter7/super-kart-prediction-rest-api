@@ -32,7 +32,7 @@ product_type = st.selectbox("product_type", [
   'Snack Foods',
   'Soft Drinks',
   'Starchy Foods']
-) 
+)
 product_mrp = st.number_input("product_mrp", min_value=0.0, step=0.1, value=1.0)
 
 # limited to only existing stores
@@ -40,22 +40,21 @@ store_establishment_year = st.selectbox("store_establishment_year", [1987, 1998,
 
 store_size = st.selectbox("store_size", ["Small", "Medium", "High"]) # 'Large' changed to 'High'
 store_location_city_type = st.selectbox("store_location_city_type", ["Tier 1", "Tier 2", "Tier 3"])
-# Removed 'store_location_type' as it is not used in the backend API
 store_type = st.selectbox("store_type", [
   "Supermarket Type2", "Supermarket Type1", "Departmental Store", "Food Mart" # 'Department Store' changed to 'Departmental Store'
 ])
 
 # Convert user input into a DataFrame
 input_data = pd.DataFrame([{
-    'Product_Weight': product_weight,
-    'Product_Sugar_Content': product_sugar_content,
-    'Product_Allocated_Area': product_allocated_area,
-    'Product_Type': product_type,
-    'Product_MRP': product_mrp,
-    'Store_Establishment_Year': store_establishment_year,
-    'Store_Size': store_size,
-    'Store_Location_City_Type': store_location_city_type,
-    'Store_Type': store_type
+    'product_weight': product_weight,
+    'product_sugar_content': product_sugar_content,
+    'product_allocated_area': product_allocated_area,
+    'product_type': product_type,
+    'product_mrp': product_mrp,
+    'store_establishment_year': store_establishment_year,
+    'store_size': store_size,
+    'store_location_city_type': store_location_city_type,
+    'store_type': store_type
 }])
 
 # Make prediction when the "Predict" button is clicked
